@@ -28,9 +28,24 @@ async def send_welcome(message: types.Message):
 @dp.callback_query_handler(lambda c: True)
 async def handle_buttons(callback_query: types.CallbackQuery):
     # Handle button callbacks here based on the callback_data
+    items=await get_just_objects()
+
     callback_data = callback_query.data
+    buttons=[]
     if callback_data == "☎️Телефоны/Адреса":
-        await bot.send_message(callback_query.from_user.id, "You clicked Button 1!")
+        for item in items:
+            buttons.append(InlineKeyboardButton(text=f"{item.name}", callback_data=f"{item.name}"))
+
+        keyboard = InlineKeyboardMarkup(row_width=2)
+        keyboard.add(*buttons)
+        await bot.edit_message_reply_markup(
+            chat_id=callback_query.message.chat.id,
+            message_id=callback_query.message.message_id,
+            reply_markup=keyboard
+        )
+
+
+
 
 
 
